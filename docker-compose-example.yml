@@ -1,0 +1,26 @@
+version: '3'
+services:
+
+    web:
+        # Set this to the tag name of the base image in build/docker-compose.yml:
+        image: yii2-base-myapp:1.0
+        volumes:
+            # During development we map the app code into the base container.
+            - ./:/var/www/html/
+            # We also tweak Apache and PHP configurations.
+            - ./config/apache/local.conf:/etc/apache2/apache2.conf
+            - ./config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        links:
+            - db
+        environment:
+            ENABLE_ENV_FILE: 1
+        ports:
+            - "8080:80"
+
+    db:
+        image: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: web
+            MYSQL_USER: web
+            MYSQL_PASSWORD: web
